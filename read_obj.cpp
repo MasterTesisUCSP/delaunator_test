@@ -5,7 +5,8 @@
 using namespace std;
 #include<vector>
 
-int main(){
+
+int main(int argc, char* argv[]) {
 
     ifstream fileIn;
     fileIn.open("2009_004315.obj");
