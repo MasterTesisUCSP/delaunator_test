@@ -125,7 +125,7 @@ function voronoiSvg(points, delaunay) {
         if (e < delaunay.halfedges[e]) {
             const a = triangleCenter2(points, delaunay, Math.floor(e / 3));
             const b = triangleCenter2(points, delaunay, Math.floor(delaunay.halfedges[e] / 3));
-            results.push(`<line stroke-width="0.5" x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="rgba(100,100,100,0.3)"/>`);
+            results.push(`<line stroke-width="0.5" x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="rgba(100,100,100,0.9)"/>`);
         }
     }
     results.push('</g>');
@@ -207,7 +207,9 @@ $('#diagram-triangles').innerHTML = `
 
 $('#diagram-circumcenters').innerHTML = `
 <svg viewBox="0 0 513 513">
- ${voronoiSvg(points1, delaunay1)}
+ ${delaunaySvg(points1, delaunay1)}
+ 
+
 ${baricenterPointsSvg(points1, delaunay1)}
 </svg>
 <figcaption>Circumcenters of the triangles</figcaption>`;
@@ -217,7 +219,7 @@ ${baricenterPointsSvg(points1, delaunay1)}
 
 ${voronoiSvg(points1, delaunay1)}
  ${baricenterPointsSvg(points1, delaunay1)}
-
+	${voronoiSvg(points1, delaunay1)}
  ${delaunaySvg(points1, delaunay1)}
 
  ${delaunaySvg(points1, delaunay1)}
