@@ -37,6 +37,13 @@ const points2 = [[320, 170], [400, 270], [220, 270], [530, 50], [100, 80], [300,
 const delaunay1 = Delaunator.from(points1);
 const delaunay2 = Delaunator.from(points2);
 
+//Colors
+const blue   = [51, 102, 153];
+const red    = [240, 44, 76];
+const green  = [0, 250, 154];
+const green2 = [3, 201, 169];
+const gray   = [160, 160, 160];
+
 
 function tangent(a, b) {
     const dx = b[0] - a[0];
@@ -76,12 +83,9 @@ function getRandomInt(max,min) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function baricenterPointsSvg(points, delaunay) {
+function baricenterPointsSvg(points, delaunay, color) {
     const results = ['<g class="vertices">'];	
-    const r = 0;
-    const g = 255;
-    const b = 0;
-    
+    const color_node =  [255,255,255];
     for (var ci = 0; ci < colors1.length; ci++) {
     	//console.log(colors1[ci][0],colors1[ci][1],colors1[ci][2]);
     }
@@ -94,7 +98,7 @@ function baricenterPointsSvg(points, delaunay) {
         //results.push(`<circle  stroke="rgba(100,100,100,0.3)" stroke-width= "0.5" cx="${point[0]}" cy="${point[1]}" r="2" fill="rgb(${colors1[t][2]},${colors1[t][1]},${colors1[t][0]})"/>`);
         	//results.push(`<circle  stroke="rgba(100,100,100,0.3)" stroke-width= "0.5" cx="${point[0]}" cy="${point[1]}" r="1" fill="rgb(${getRandomInt(255,0)},${getRandomInt(255,0)},${getRandomInt(255,0)})"/>`);
         	//results.push(`<circle  stroke="rgba(100,100,100,0.3)" stroke-width= "0.5" cx="${point[0]}" cy="${point[1]}" r="1" fill="rgb(${getRandomInt()},${getRandomInt()},${getRandomInt()})"/>`);
-        results.push(`<circle  stroke="rgba(100,100,100,0.3)"   cx="${point[0]}" cy="${point[1]}" r="2" fill="rgb(${r},${g},${b})"/>`);
+        results.push(`<circle  stroke="rgba(${color[0]},${color[1]},${color[2]},1)"   cx="${point[0]}" cy="${point[1]}" r="2" fill="rgba(${color_node[0]},${color_node[1]},${color_node[2]},1)"/>`);
     }
     console.log(baricentrosX);
     console.log(baricentrosY);
@@ -102,14 +106,31 @@ function baricenterPointsSvg(points, delaunay) {
     return results.join('');
 }
 
-function delaunaySvg(points, delaunay) {
+function baricenterPointsSvg_(points, delaunay, colors_node) {
+    const results = ['<g class="vertices">'];	
+    const color =  [255,255,255];
+    
+    for (let t = 0; t < delaunay.triangles.length / 3; t++) {
+        const point = triangleCenter2(points, delaunay, t);
+        //console.log("point:",point);
+        baricentrosX.push(Math.round(point[0]) );
+        baricentrosY.push(Math.round(point[1]) );
+        results.push(`<circle  stroke="rgba(${color[0]},${color[1]},${color[2]},1)" stroke-width= "0.5"  cx="${point[0]}" cy="${point[1]}" r="2" fill="rgba(${colors_node[t][2]},${colors_node[t][1]},${colors_node[t][0]},1)"/>`);
+    }
+    results.push('</g>');
+    return results.join('');
+}
+
+
+function delaunaySvg(points, delaunay, color) {
     const results = ['<g class="edges">'];
     forEachTriangleEdge(points, delaunay, (e, p, q) => {
-        results.push(`<line stroke-width="0.7" x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="rgba(0,0,0,0.7)" />`);
+        results.push(`<line stroke-width="1.5" x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="rgba(${color[0]},${color[1]},${color[2]},1)" />`);
     });
     results.push('</g>');
     return results.join('');
 }
+
 
 function trianglesSvg(points, delaunay, fill = () => 'white') {
     const results = ['<g class="delaunay-draw">'];
@@ -121,13 +142,13 @@ function trianglesSvg(points, delaunay, fill = () => 'white') {
     return results.join('');
 }
 
-function voronoiSvg(points, delaunay) {
+function voronoiSvg(points, delaunay, color) {
     const results = ['<g class="edges">'];
     for (let e = 0; e < delaunay.halfedges.length; e++) {
         if (e < delaunay.halfedges[e]) {
             const a = triangleCenter2(points, delaunay, Math.floor(e / 3));
             const b = triangleCenter2(points, delaunay, Math.floor(delaunay.halfedges[e] / 3));
-            results.push(`<line stroke-width="0.7" x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="rgba(100,100,100,0.9)"/>`);
+            results.push(`<line stroke-width="1.5" x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="rgba(${color[0]},${color[1]},${color[2]},1)"/>`);
         }
     }
     results.push('</g>');
@@ -207,17 +228,47 @@ $('#diagram-triangles').innerHTML = `
 
 //$('#baricentros').innerHTML = baricentrosX;
 
+//***** MESH
+	$('#diagram-mesh').innerHTML = `
+	<svg viewBox="0 0 513 513">
 
-$('#diagram-circumcenters').innerHTML = `
-<svg viewBox="0 0 513 513">
- 
+		${delaunaySvg(points1, delaunay1, blue)} 
 
-${baricenterPointsSvg(points1, delaunay1)}
-${voronoiSvg(points1, delaunay1)}
-${delaunaySvg(points1, delaunay1)} 
+	</svg>`;
 
-</svg>
-<figcaption>Grafo Dual con color promedio</figcaption>`;
+//***** GRAPH
+	$('#diagram-graph').innerHTML = `
+	<svg viewBox="0 0 513 513">
+
+		${voronoiSvg(points1, delaunay1, gray)}	
+		${baricenterPointsSvg(points1, delaunay1, red)}
+		
+
+	</svg>`;
+
+
+//***** MESH + graph 
+
+	$('#diagram-mesh-graph').innerHTML = `
+	<svg viewBox="0 0 513 513">
+
+		${delaunaySvg(points1, delaunay1, blue)} 
+		${voronoiSvg(points1, delaunay1, gray)}	
+		${baricenterPointsSvg(points1, delaunay1, red)}
+
+	</svg>`;
+
+
+
+//***** GRAPH Color
+	$('#diagram-graph_color').innerHTML = `
+	<svg viewBox="0 0 513 513">
+
+		${voronoiSvg(points1, delaunay1, gray)}	
+		${baricenterPointsSvg_(points1, delaunay1, colors1)}
+		
+	</svg>`;
+
 
 /*
 
