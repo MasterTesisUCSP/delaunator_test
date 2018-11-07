@@ -90,9 +90,9 @@ function baricenterPointsSvg(points, delaunay) {
         baricentrosX.push(point[0]);
         baricentrosY.push(point[1]);
         //results.push(`<circle  stroke="rgba(100,100,100,0.3)" stroke-width= "0.5" cx="${point[0]}" cy="${point[1]}" r="1" fill="rgb(${colors[getRandomInt(2,0)][]},${getRandomInt(255,0)},${getRandomInt(255,0)})"/>`);
-        results.push(`<circle  stroke="rgba(100,100,100,0.3)" stroke-width= "0.5" cx="${point[0]}" cy="${point[1]}" r="1" fill="rgb(${getRandomInt(255,0)},${getRandomInt(255,0)},${getRandomInt(255,0)})"/>`);
+        //results.push(`<circle  stroke="rgba(100,100,100,0.3)" stroke-width= "0.5" cx="${point[0]}" cy="${point[1]}" r="1" fill="rgb(${getRandomInt(255,0)},${getRandomInt(255,0)},${getRandomInt(255,0)})"/>`);
         //results.push(`<circle  stroke="rgba(100,100,100,0.3)" stroke-width= "0.5" cx="${point[0]}" cy="${point[1]}" r="1" fill="rgb(${getRandomInt()},${getRandomInt()},${getRandomInt()})"/>`);
-        //results.push(`<circle  stroke="black"  cx="${point[0]}" cy="${point[1]}" r="1" fill="rgb("${r}","${g}","${b}")"/>`);
+        results.push(`<circle  stroke="black"  cx="${point[0]}" cy="${point[1]}" r="1" fill="rgb("${r}","${g}","${b}")"/>`);
     }
     //console.log(baricentrosX);
     //console.log(baricentrosY);
