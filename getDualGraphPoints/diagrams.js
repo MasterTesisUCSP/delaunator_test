@@ -43,7 +43,8 @@ const red    = [240, 44, 76];
 const green  = [0, 250, 154];
 const green2 = [3, 201, 169];
 const gray   = [160, 160, 160];
-
+const white   = [255,255,255];
+const black   = [0,0,0];
 
 function tangent(a, b) {
     const dx = b[0] - a[0];
@@ -122,25 +123,28 @@ function baricenterPointsSvg_(points, delaunay, colors_node) {
 }
 
 
-function delaunaySvg(points, delaunay, color) {
-    const results = ['<g class="edges">'];
-    forEachTriangleEdge(points, delaunay, (e, p, q) => {
-        results.push(`<line stroke-width="1.5" x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="rgba(${color[0]},${color[1]},${color[2]},1)" />`);
-    });
-    results.push('</g>');
-    return results.join('');
-}
 
-
-function trianglesSvg(points, delaunay, fill = () => 'white') {
+function trianglesSvg(points, delaunay,colors_node, fill = () => 'white') {
     const results = ['<g class="delaunay-draw">'];
 
     forEachTriangle(points, delaunay, (t, p) => {
-        results.push(`<polygon data-id="${t}" points="${p}" fill="${fill(t)}"/>`);
+    	//t: indice
+    	//p: triangulo
+        results.push(`<polygon data-id="${t}" points="${p}" fill="rgba(${colors_node[t][2]},${colors_node[t][1]},${colors_node[t][0]},1)"/>`);
     });
     results.push('</g>');
     return results.join('');
 }
+
+function delaunaySvg(points, delaunay, color) {
+    const results = ['<g class="edges">'];
+    forEachTriangleEdge(points, delaunay, (e, p, q) => {
+        results.push(`<line stroke-width="0.5" x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="rgba(${color[0]},${color[1]},${color[2]},1)" />`);
+    });
+    results.push('</g>');
+    return results.join('');
+}
+
 
 function voronoiSvg(points, delaunay, color) {
     const results = ['<g class="edges">'];
@@ -228,11 +232,16 @@ $('#diagram-triangles').innerHTML = `
 
 //$('#baricentros').innerHTML = baricentrosX;
 
+//***** MESH color
+	$('#diagram-mesh-color').innerHTML = `
+	<svg viewBox="0 0 513 513">
+		${trianglesSvg(points1, delaunay1,colors1, t => `hsl(${t % 360},30%,50%)`)}
+	</svg>`;
+
 //***** MESH
 	$('#diagram-mesh').innerHTML = `
 	<svg viewBox="0 0 513 513">
-
-		${delaunaySvg(points1, delaunay1, blue)} 
+		${delaunaySvg(points1, delaunay1, blue)}
 
 	</svg>`;
 
@@ -264,15 +273,13 @@ $('#diagram-triangles').innerHTML = `
 	$('#diagram-graph_color').innerHTML = `
 	<svg viewBox="0 0 513 513">
 
-		${voronoiSvg(points1, delaunay1, gray)}	
+		
 		${baricenterPointsSvg_(points1, delaunay1, colors1)}
 		
 	</svg>`;
 
-
+//${voronoiSvg(points1, delaunay1, gray)}	
 /*
-
-
 ${voronoiSvg(points1, delaunay1)}
  ${baricenterPointsSvg(points1, delaunay1)}
 	${voronoiSvg(points1, delaunay1)}
@@ -281,7 +288,7 @@ ${voronoiSvg(points1, delaunay1)}
  ${delaunaySvg(points1, delaunay1)}
   ${redPointsSvg(points1)}
   */
-
+/*
 function updateCirculation() {
     const slider = $('#diagram-circulate input');
     const incoming = edgesAroundPoint(delaunay2, 2);
@@ -291,3 +298,4 @@ function updateCirculation() {
     $('#diagram-circulate .highlight').innerHTML = halfedgeSvg(points2, delaunay2, e => e === edge);
 }
 updateCirculation();
+*/
