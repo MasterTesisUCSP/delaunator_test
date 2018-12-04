@@ -232,6 +232,17 @@ $('#diagram-triangles').innerHTML = `
 
 //$('#baricentros').innerHTML = baricentrosX;
 
+
+
+//***** GRAPH Color
+	$('#diagram-graph_color').innerHTML = `
+	<svg viewBox="0 0 513 513">
+
+		
+		${baricenterPointsSvg_(points1, delaunay1, colors1)}
+		
+	</svg>`;
+	
 //***** MESH color
 	$('#diagram-mesh-color').innerHTML = `
 	<svg viewBox="0 0 513 513">
@@ -268,15 +279,6 @@ $('#diagram-triangles').innerHTML = `
 	</svg>`;
 
 
-
-//***** GRAPH Color
-	$('#diagram-graph_color').innerHTML = `
-	<svg viewBox="0 0 513 513">
-
-		
-		${baricenterPointsSvg_(points1, delaunay1, colors1)}
-		
-	</svg>`;
 
 //${voronoiSvg(points1, delaunay1, gray)}	
 /*
