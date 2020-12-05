@@ -31,10 +31,11 @@ const colors1 =[[192, 204, 209],[192, 204, 209],[182, 89, 155],[192, 204, 209],[
 const baricentrosX = [];
 const baricentrosY = [];
 
-const points2 = [[320, 170], [400, 270], [220, 270], [530, 50], [100, 80], [300, 30]];
-
+const points2 = [[0, 0], [100, 50], [200, 0], [50, 100], [0, 200], [120, 120],[200,200]];
+const colors2 = [[192, 204, 209],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]
 const delaunay1 = Delaunator.from(points1);
 const delaunay2 = Delaunator.from(points2);
+console.log(delaunay2);
 
 //Colors
 const blue   = [51, 102, 153];
@@ -60,6 +61,22 @@ function normal(a, b) {
     const dy = b[1] - a[1];
     const d = Math.sqrt(dx * dx + dy * dy);
     return [dy / d, -dx / d];
+}
+
+
+
+function adjacentTrianglesSvg(points) {
+   
+//function trianglesSvg(points, delaunay,colors_node, fill = () => 'white') {
+    const results = ['<g class="delaunay-draw">'];
+
+    forEachTriangle(points, delaunay, (t, p) => {
+    	//t: indice
+    	//p: triangulo
+        results.push(`<polygon data-id="${t}" points="${p}" fill="rgba(${colors_node[t][2]},${colors_node[t][1]},${colors_node[t][0]},2)"/>`);
+    });
+    results.push('</g>');
+    return results.join('');
 }
 
 
@@ -101,7 +118,13 @@ function baricenterPointsSvg(points, delaunay, color) {
         //results.push(`<circle  stroke="rgba(100,100,100,0.3)" stroke-width= "0.5" cx="${point[0]}" cy="${point[1]}" r="2" fill="rgb(${colors1[t][2]},${colors1[t][1]},${colors1[t][0]})"/>`);
         	//results.push(`<circle  stroke="rgba(100,100,100,0.3)" stroke-width= "0.5" cx="${point[0]}" cy="${point[1]}" r="1" fill="rgb(${getRandomInt(255,0)},${getRandomInt(255,0)},${getRandomInt(255,0)})"/>`);
         	//results.push(`<circle  stroke="rgba(100,100,100,0.3)" stroke-width= "0.5" cx="${point[0]}" cy="${point[1]}" r="1" fill="rgb(${getRandomInt()},${getRandomInt()},${getRandomInt()})"/>`);
-        results.push(`<circle  stroke="rgba(${color[0]},${color[1]},${color[2]},1)"   cx="${point[0]}" cy="${point[1]}" r="2" fill="rgba(${color_node[0]},${color_node[1]},${color_node[2]},1)"/>`);
+        results.push(`<circle  
+            stroke="rgba(${color[0]},${color[1]},${color[2]},1)"   
+            cx="${point[0]}" 
+            cy="${point[1]}" 
+            r="2" 
+            fill="rgba(${color_node[0]},${color_node[1]},${color_node[2]},1)"/>
+            <text x="${Math.round(point[0])}" y="${Math.round(point[1])}" font-size="smaller" fill="red">${t}</text>`);
     }
     console.log(baricentrosX);
     console.log(baricentrosY);
@@ -125,7 +148,7 @@ function baricenterPointsSvg_(points, delaunay, colors_node) {
 }
 
 
-
+//Todo
 function trianglesSvg(points, delaunay,colors_node, fill = () => 'white') {
     const results = ['<g class="delaunay-draw">'];
 
@@ -201,17 +224,23 @@ function cellsSvg(points, delaunay) {
     return results.join('');
 }
 
+//delaunay.halfedges.length
 function halfedgeSvg(points, delaunay, filter = () => true) {
     const dn = 4, dt = 15;
     const results = ['<g class="edges arrowhead">'];
-    for (let e1 = 0; e1 < delaunay.halfedges.length; e1++) {
+    for (let e1 = 0; e1 < 10; e1++) {
         if (!filter(e1)) { continue; }
         const e2 = nextHalfedge(e1);
         const a = points[delaunay.triangles[e1]];
         const b = points[delaunay.triangles[e2]];
         const n = normal(a, b);
         const t = tangent(a, b);
-        results.push(`<line class="edge-${e1}" x1="${a[0] + dn * n[0] + dt * t[0]}" y1="${a[1] + dn * n[1] + dt * t[1]}" x2="${b[0] + dn * n[0] - dt * t[0]}" y2="${b[1] + dn * n[1] - dt * t[1]}" />`);
+        results.push(`<line class="edge-${e1}" 
+            x1="${a[0] + dn * n[0] + dt * t[0]}" 
+            y1="${a[1] + dn * n[1] + dt * t[1]}" 
+            x2="${b[0] + dn * n[0] - dt * t[0]}" 
+            y2="${b[1] + dn * n[1] - dt * t[1]}" />
+            `);
     }
     results.push('</g>');
     return results.join('');
@@ -276,6 +305,20 @@ $('#diagram-triangles').innerHTML = `
 	</svg>`;
 	*/
 //***** MESH color
+
+
+    trianglesAdjacentToTriangle(delaunay2,7)
+    $('#diagram-prueba').innerHTML = `
+    <svg viewBox="0 0 513 250">
+    ${halfedgeSvg(points2, delaunay2)}
+    ${redPointsSvg(points2)}
+
+        ${trianglesSvg(points2, delaunay2,colors2, t => `hsl(${t % 360},30%,50%)`)}
+        
+        
+        
+	</svg>`;
+    //${halfedgeSvg(points2, delaunay2)}
 
 	$('#diagram-mesh-color').innerHTML = `
 	<svg viewBox="0 0 513 513">

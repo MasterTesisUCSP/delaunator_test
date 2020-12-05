@@ -148,6 +148,7 @@ function trianglesAdjacentToTriangle(delaunay, t) {
             adjacentTriangles.push(triangleOfEdge(opposite));
         }
     }
+    console.log('adjT:',adjacentTriangles);
     return adjacentTriangles;
 }
     </script>
@@ -190,19 +191,18 @@ function baricenter(a, b, c) {
     </script>
 
 <div class="row">
-	<div class="col-md-6"> <figure id="diagram-graph_color"></figure> </div>
+	<div class="col-md-6"> <figure id="diagram-prueba"></figure> </div>
+    <div class="col-md-6"> <figure id="diagram-graph_color"></figure> </div>
+</div>
+
+<div class="row">
     <div class="col-md-6"> <figure id="diagram-mesh-color"></figure> </div>
-    
-
+    <div class="col-md-6"> <figure id="diagram-mesh"></figure> </div>
 </div>
 
+
 <div class="row">
-	<div class="col-md-6"> <figure id="diagram-mesh"></figure> </div>
     <div class="col-md-6"> <figure id="diagram-mesh-graph"></figure> </div>
-</div>
-
-
-<div class="row">
     <div class="col-md-6" > <figure id="diagram-graph"></figure> </div>
     
 </div>
